@@ -1,0 +1,99 @@
+{
+  "training_config": {
+    "learning_rate": 1e-05,
+    "batch_size": 32,
+    "epochs_run": 4,
+    "train_samples": 2000,
+    "val_samples": 400,
+    "trainable_parameters": 6601499,
+    "non_trainable_parameters": 1528031,
+    "total_parameters": 8129530,
+    "unfrozen_blocks": [
+      "block6",
+      "block7",
+      "top_conv",
+      "dense",
+      "dense_1"
+    ],
+    "frozen_blocks": [
+      "blocks 1-5",
+      "all BatchNormalization"
+    ]
+  },
+  "validation_performance": {
+    "best_epoch": 1,
+    "val_auc_epoch1": 0.5,
+    "val_loss_epoch1": 0.6932,
+    "val_accuracy_epoch1": 0.5
+  },
+  "test_performance": {
+    "baseline_v5": {
+      "accuracy": 0.8104522068778771,
+      "precision": 0.8385240352064997,
+      "recall": 0.9174074074074074,
+      "f1": 0.8761938450654404,
+      "auc": 0.8365831188691208,
+      "tp": 2477,
+      "tn": 516,
+      "fp": 477,
+      "fn": 223,
+      "fpr": 0.48036253776435045,
+      "fnr": 0.08259259259259259
+    },
+    "finetuned_v5_021": {
+      "accuracy": 0.7311129163281884,
+      "precision": 0.7311129163281884,
+      "recall": 1.0,
+      "f1": 0.8446738620366026,
+      "auc": 0.46969620678079893,
+      "tp": 2700,
+      "tn": 0,
+      "fp": 993,
+      "fn": 0,
+      "fpr": 1.0,
+      "fnr": 0.0
+    },
+    "finetuned_v5_optimal": {
+      "accuracy": 0.7311129163281884,
+      "precision": 0.7311129163281884,
+      "recall": 1.0,
+      "f1": 0.8446738620366026,
+      "auc": 0.46969620678079893,
+      "tp": 2700,
+      "tn": 0,
+      "fp": 993,
+      "fn": 0,
+      "fpr": 1.0,
+      "fnr": 0.0,
+      "optimal_threshold": 0.01
+    }
+  },
+  "feature_separability_comparison": {
+    "baseline": {
+      "real_fake_centroid_dist": 0.0027,
+      "fp_tn_centroid_dist": 0.0044,
+      "fp_tp_centroid_dist": 0.0042,
+      "fn_tp_centroid_dist": 0.0069,
+      "fn_tn_centroid_dist": 0.0025,
+      "nearest_centroid_acc": 0.5275,
+      "knn1_acc": 0.6512,
+      "knn3_acc": 0.585,
+      "knn5_acc": 0.5638,
+      "silhouette_score": 0.0005,
+      "pca_pc1_variance": 0.9002
+    },
+    "finetuned": {
+      "real_fake_centroid_dist": 0.00377835426479578,
+      "fp_tn_centroid_dist": 0.006483415607362986,
+      "fp_tp_centroid_dist": 0.005414521787315607,
+      "fn_tp_centroid_dist": 0.009124666452407837,
+      "fn_tn_centroid_dist": 0.003762570908293128,
+      "nearest_centroid_acc": 0.52,
+      "knn1_acc": 0.6512499999999999,
+      "knn3_acc": 0.6,
+      "knn5_acc": 0.6012500000000001,
+      "silhouette_score": 0.0004898165934719145,
+      "pca_pc1_variance": 0.8827705383300781
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "v5_production_baseline": {
+    "model": "DeepShield V5 Production Baseline",
+    "threshold": 0.21,
+    "accuracy": 0.8105,
+    "precision": 0.8385,
+    "recall": 0.9174,
+    "f1": 0.8762,
+    "roc_auc": 0.8366,
+    "tp": 2475,
+    "tn": 518,
+    "fp": 477,
+    "fn": 223,
+    "real_fpr": 0.4793969849246231,
+    "fake_fnr": 0.0826538176426983
+  },
+  "v7_validation_calibrated": {
+    "model": "DeepShield V7 Metric-Learning",
+    "threshold_source": "validation_calibrated",
+    "selected_threshold": 0.27,
+    "accuracy": 0.8088275115082588,
+    "precision": 0.8251793868232224,
+    "recall": 0.937037037037037,
+    "f1": 0.8775580992022199,
+    "roc_auc": 0.8535226213121481,
+    "tp": 2530,
+    "tn": 457,
+    "fp": 536,
+    "fn": 170,
+    "real_fpr": 0.5397784491440081,
+    "fake_fnr": 0.06296296296296296
+  },
+  "delta": {
+    "accuracy": -0.0016724884917411753,
+    "precision": -0.013320613176777574,
+    "recall": 0.01963703703703701,
+    "f1": 0.0013580992022199645,
+    "roc_auc": 0.016922621312148056,
+    "fp": 59,
+    "fn": -53,
+    "real_fpr": 0.06038146421938495,
+    "fake_fnr": -0.019690854679735345
+  },
+  "all_candidates_test_evaluation": {
+    "best_f1": {
+      "threshold": 0.27,
+      "accuracy": 0.8088275115082588,
+      "precision": 0.8251793868232224,
+      "recall": 0.937037037037037,
+      "f1": 0.8775580992022199,
+      "tp": 2530,
+      "tn": 457,
+      "fp": 536,
+      "fn": 170,
+      "real_fpr": 0.5397784491440081,
+      "fake_fnr": 0.06296296296296296
+    },
+    "highest_accuracy": {
+      "threshold": 0.27,
+      "accuracy": 0.8088275115082588,
+      "precision": 0.8251793868232224,
+      "recall": 0.937037037037037,
+      "f1": 0.8775580992022199,
+      "tp": 2530,
+      "tn": 457,
+      "fp": 536,
+      "fn": 170,
+      "real_fpr": 0.5397784491440081,
+      "fake_fnr": 0.06296296296296296
+    },
+    "balanced_error_count": {
+      "threshold": 0.43,
+      "accuracy": 0.8055781207690225,
+      "precision": 0.8695003728560775,
+      "recall": 0.8637037037037038,
+      "f1": 0.8665923448532145,
+      "tp": 2332,
+      "tn": 643,
+      "fp": 350,
+      "fn": 368,
+      "real_fpr": 0.35246727089627394,
+      "fake_fnr": 0.1362962962962963
+    },
+    "balanced_error_rate": {
+      "threshold": 0.6,
+      "accuracy": 0.7671269970213919,
+      "precision": 0.9003481288076588,
+      "recall": 0.7662962962962963,
+      "f1": 0.8279311724689876,
+      "tp": 2069,
+      "tn": 764,
+      "fp": 229,
+      "fn": 631,
+      "real_fpr": 0.23061430010070494,
+      "fake_fnr": 0.2337037037037037
+    }
+  },
+  "governance_verdict": "KEEP EXISTING V5"
+}

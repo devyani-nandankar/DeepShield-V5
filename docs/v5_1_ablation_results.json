@@ -1,0 +1,89 @@
+{
+  "timestamp": "2026-09-18 05:58:34",
+  "hardware": "CPU (AVX2/FMA Optimized)",
+  "feature_dim": 1408,
+  "sequence_length": 16,
+  "inference_time_per_sequence_sec": 0.1128,
+  "splits": {
+    "train_video_count": 10,
+    "train_sequences_a": 29,
+    "train_sequences_b": 29,
+    "val_video_count": 6,
+    "val_sequences": 12,
+    "test_video_count": 8,
+    "test_sequences": 8,
+    "whatsapp_benchmark_videos": 20
+  },
+  "model_a_no_aug": {
+    "model_path": "c:\\Users\\ADMIN\\Desktop\\DeepShield_V5_Final\\models\\v5_1\\deepshield_v5_1_temporal_no_aug.keras",
+    "training_time_sec": 21.9,
+    "val_optimal_threshold": 0.51,
+    "val_f1": 1.0,
+    "held_out_test": {
+      "accuracy": 0.75,
+      "precision": 0.6667,
+      "recall": 0.6667,
+      "f1": 0.6667,
+      "roc_auc": 0.8,
+      "pr_auc": 0.5139,
+      "real_accuracy": 0.8,
+      "fake_accuracy": 0.6667,
+      "tp": 2,
+      "tn": 4,
+      "fp": 1,
+      "fn": 1,
+      "total": 8
+    },
+    "whatsapp_benchmark": {
+      "accuracy": 0.75,
+      "precision": 0.8571,
+      "recall": 0.6,
+      "f1": 0.7059,
+      "roc_auc": 0.92,
+      "pr_auc": 0.9064,
+      "real_accuracy": 0.9,
+      "fake_accuracy": 0.6,
+      "tp": 6,
+      "tn": 9,
+      "fp": 1,
+      "fn": 4,
+      "total": 20
+    }
+  },
+  "model_b_with_aug": {
+    "model_path": "c:\\Users\\ADMIN\\Desktop\\DeepShield_V5_Final\\models\\v5_1\\deepshield_v5_1_temporal.keras",
+    "training_time_sec": 17.39,
+    "val_optimal_threshold": 0.58,
+    "val_f1": 1.0,
+    "held_out_test": {
+      "accuracy": 0.75,
+      "precision": 0.6667,
+      "recall": 0.6667,
+      "f1": 0.6667,
+      "roc_auc": 0.7333,
+      "pr_auc": 0.4611,
+      "real_accuracy": 0.8,
+      "fake_accuracy": 0.6667,
+      "tp": 2,
+      "tn": 4,
+      "fp": 1,
+      "fn": 1,
+      "total": 8
+    },
+    "whatsapp_benchmark": {
+      "accuracy": 0.7,
+      "precision": 0.8333,
+      "recall": 0.5,
+      "f1": 0.625,
+      "roc_auc": 0.81,
+      "pr_auc": 0.8412,
+      "real_accuracy": 0.9,
+      "fake_accuracy": 0.5,
+      "tp": 5,
+      "tn": 9,
+      "fp": 1,
+      "fn": 5,
+      "total": 20
+    }
+  }
+}

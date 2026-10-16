@@ -1,0 +1,464 @@
+{
+  "model_a_no_aug": {
+    "experiment": "DeepShield_V5_2_Model_A_NoAug",
+    "model_path": "c:\\Users\\ADMIN\\Desktop\\DeepShield_V5_Final\\models\\v5_2\\deepshield_v5_2_temporal_no_aug.keras",
+    "training_time_seconds": 48.37,
+    "epochs_trained": 16,
+    "best_epoch": 2,
+    "calibrated_threshold": 0.3,
+    "validation_metrics_video": {
+      "accuracy": 0.75,
+      "precision": 0.6667,
+      "recall": 1.0,
+      "f1": 0.8,
+      "roc_auc": 0.75,
+      "real_accuracy": 0.5,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 2,
+        "TN": 1,
+        "FP": 1,
+        "FN": 0
+      },
+      "sample_count": 4
+    },
+    "official_test_metrics_video": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "real_accuracy": 1.0,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 2,
+        "TN": 2,
+        "FP": 0,
+        "FN": 0
+      },
+      "sample_count": 4
+    },
+    "official_test_metrics_sequence": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "real_accuracy": 1.0,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 4,
+        "TN": 4,
+        "FP": 0,
+        "FN": 0
+      },
+      "sample_count": 8
+    },
+    "whatsapp_benchmark_metrics_video": {
+      "accuracy": 0.95,
+      "precision": 0.9091,
+      "recall": 1.0,
+      "f1": 0.9524,
+      "roc_auc": 0.99,
+      "real_accuracy": 0.9,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 10,
+        "TN": 9,
+        "FP": 1,
+        "FN": 0
+      },
+      "sample_count": 20
+    },
+    "whatsapp_benchmark_metrics_sequence": {
+      "accuracy": 0.9744,
+      "precision": 0.9524,
+      "recall": 1.0,
+      "f1": 0.9756,
+      "roc_auc": 0.9947,
+      "real_accuracy": 0.9474,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 20,
+        "TN": 18,
+        "FP": 1,
+        "FN": 0
+      },
+      "sample_count": 39
+    },
+    "history": {
+      "accuracy": [
+        0.5333333611488342,
+        0.9333333373069763,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "auc": [
+        0.5892857313156128,
+        0.984375,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "loss": [
+        0.6838725805282593,
+        0.3906644880771637,
+        0.23063908517360687,
+        0.09911992400884628,
+        0.03663872554898262,
+        0.014843819662928581,
+        0.007328507956117392,
+        0.004297448787838221,
+        0.006281659938395023,
+        0.004274889826774597,
+        0.0068757194094359875,
+        0.0026260092854499817,
+        0.003752137301489711,
+        0.0031406101770699024,
+        0.002264562528580427,
+        0.0027609802782535553
+      ],
+      "val_accuracy": [
+        0.5,
+        0.75,
+        0.625,
+        0.5,
+        0.5,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625
+      ],
+      "val_auc": [
+        0.625,
+        0.625,
+        0.625,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.6875,
+        0.6875,
+        0.6875,
+        0.6875
+      ],
+      "val_loss": [
+        0.6416420936584473,
+        0.6318343877792358,
+        0.6649161577224731,
+        0.7749841213226318,
+        0.9110457897186279,
+        1.0410367250442505,
+        1.1532633304595947,
+        1.2015008926391602,
+        1.2403374910354614,
+        1.2708725929260254,
+        1.2984898090362549,
+        1.3220221996307373,
+        1.331736445426941,
+        1.341112732887268,
+        1.3505520820617676,
+        1.3593237400054932
+      ],
+      "learning_rate": [
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0002500000118743628,
+        0.0002500000118743628,
+        0.0002500000118743628,
+        0.0002500000118743628
+      ]
+    }
+  },
+  "model_b_with_aug": {
+    "experiment": "DeepShield_V5_2_Model_B_WithAug",
+    "model_path": "c:\\Users\\ADMIN\\Desktop\\DeepShield_V5_Final\\models\\v5_2\\deepshield_v5_2_temporal.keras",
+    "training_time_seconds": 28.94,
+    "epochs_trained": 15,
+    "best_epoch": 1,
+    "calibrated_threshold": 0.05,
+    "validation_metrics_video": {
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "roc_auc": 0.5,
+      "real_accuracy": 0.0,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 2,
+        "TN": 0,
+        "FP": 2,
+        "FN": 0
+      },
+      "sample_count": 4
+    },
+    "official_test_metrics_video": {
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "roc_auc": 1.0,
+      "real_accuracy": 0.0,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 2,
+        "TN": 0,
+        "FP": 2,
+        "FN": 0
+      },
+      "sample_count": 4
+    },
+    "official_test_metrics_sequence": {
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "roc_auc": 1.0,
+      "real_accuracy": 0.0,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 4,
+        "TN": 0,
+        "FP": 4,
+        "FN": 0
+      },
+      "sample_count": 8
+    },
+    "whatsapp_benchmark_metrics_video": {
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "roc_auc": 1.0,
+      "real_accuracy": 0.0,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 10,
+        "TN": 0,
+        "FP": 10,
+        "FN": 0
+      },
+      "sample_count": 20
+    },
+    "whatsapp_benchmark_metrics_sequence": {
+      "accuracy": 0.5128,
+      "precision": 0.5128,
+      "recall": 1.0,
+      "f1": 0.678,
+      "roc_auc": 1.0,
+      "real_accuracy": 0.0,
+      "fake_accuracy": 1.0,
+      "confusion_matrix": {
+        "TP": 20,
+        "TN": 0,
+        "FP": 19,
+        "FN": 0
+      },
+      "sample_count": 39
+    },
+    "history": {
+      "accuracy": [
+        0.7333333492279053,
+        0.9666666388511658,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "auc": [
+        0.8102678060531616,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "loss": [
+        0.6129801273345947,
+        0.3721420168876648,
+        0.17544184625148773,
+        0.06904661655426025,
+        0.03726405277848244,
+        0.009812788106501102,
+        0.007744267117232084,
+        0.008303677663207054,
+        0.007346440572291613,
+        0.004018890205770731,
+        0.004361955914646387,
+        0.008798518218100071,
+        0.002776313805952668,
+        0.004009483847767115,
+        0.00521126901730895
+      ],
+      "val_accuracy": [
+        0.375,
+        0.375,
+        0.5,
+        0.5,
+        0.5,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625,
+        0.625
+      ],
+      "val_auc": [
+        0.5,
+        0.5,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75
+      ],
+      "val_loss": [
+        0.6992713212966919,
+        0.7513418197631836,
+        0.7337362766265869,
+        0.8134976625442505,
+        0.9770790934562683,
+        1.1338188648223877,
+        1.2090954780578613,
+        1.2848691940307617,
+        1.3513736724853516,
+        1.4056092500686646,
+        1.449939489364624,
+        1.4705345630645752,
+        1.4906827211380005,
+        1.507025122642517,
+        1.5219664573669434
+      ],
+      "learning_rate": [
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0010000000474974513,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0005000000237487257,
+        0.0002500000118743628,
+        0.0002500000118743628,
+        0.0002500000118743628,
+        0.0002500000118743628
+      ]
+    }
+  },
+  "inference_benchmarks": {
+    "hardware_device": "CPU (Intel/AMD x86_64, Native Windows)",
+    "feature_extraction_ms_per_frame": 899.96,
+    "bilstm_inference_ms_per_sequence": 532.48,
+    "total_video_inference_seconds": 3.338,
+    "real_time_capable": false
+  },
+  "phase1_baseline": {
+    "dataset": "WhatsApp Benchmark (n=20)",
+    "accuracy": 0.85,
+    "precision": 0.8182,
+    "recall": 0.9,
+    "f1": 0.8571,
+    "roc_auc": 0.9
+  },
+  "v5_1_benchmarks": {
+    "official_test_model_a": {
+      "accuracy": 0.75,
+      "f1": 0.6667,
+      "roc_auc": 0.8
+    },
+    "official_test_model_b": {
+      "accuracy": 0.75,
+      "f1": 0.6667,
+      "roc_auc": 0.7333
+    },
+    "whatsapp_model_a": {
+      "accuracy": 0.75,
+      "f1": 0.7059,
+      "roc_auc": 0.92
+    },
+    "whatsapp_model_b": {
+      "accuracy": 0.7,
+      "f1": 0.625,
+      "roc_auc": 0.81
+    }
+  }
+}

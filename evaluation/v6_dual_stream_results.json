@@ -1,0 +1,193 @@
+{
+  "training_config": {
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "epochs_run": 12,
+    "train_samples": 2000,
+    "val_samples": 400,
+    "trainable_parameters": 487425,
+    "non_trainable_parameters": 7769017,
+    "total_parameters": 8256442,
+    "architecture": "Dual-Stream (Frozen EfficientNetB2 + 3-layer Forensic Residual CNN + Concat + Dense(256))"
+  },
+  "validation_performance": {
+    "final_val_loss": 0.6890091896057129,
+    "final_val_accuracy": 0.5099999904632568,
+    "final_val_auc": 0.5976499915122986,
+    "best_val_auc": 0.5976499915122986
+  },
+  "test_performance": {
+    "baseline_v5": {
+      "accuracy": 0.8104522068778771,
+      "precision": 0.8385240352064997,
+      "recall": 0.9174074074074074,
+      "f1": 0.8761938450654404,
+      "auc": 0.8365831188691208,
+      "tp": 2477,
+      "tn": 516,
+      "fp": 477,
+      "fn": 223,
+      "fpr": 0.48036253776435045,
+      "fnr": 0.08259259259259259
+    },
+    "v6_dual_stream_021": {
+      "accuracy": 0.7311129163281884,
+      "precision": 0.7311129163281884,
+      "recall": 1.0,
+      "f1": 0.8446738620366026,
+      "auc": 0.624100182760807,
+      "tp": 2700,
+      "tn": 0,
+      "fp": 993,
+      "fn": 0,
+      "fpr": 1.0,
+      "fnr": 0.0
+    },
+    "v6_dual_stream_optimal": {
+      "accuracy": 0.7330083942594097,
+      "precision": 0.7328804347826087,
+      "recall": 0.9988888888888889,
+      "f1": 0.8454545454545455,
+      "auc": 0.624100182760807,
+      "tp": 2697,
+      "tn": 10,
+      "fp": 983,
+      "fn": 3,
+      "fpr": 0.9899295065458208,
+      "fnr": 0.0011111111111111111,
+      "optimal_threshold": 0.4
+    }
+  },
+  "feature_separability_comparison": {
+    "baseline_v5": {
+      "real_fake_centroid_dist": 0.0027,
+      "nearest_centroid_acc": 0.5275,
+      "knn1_acc": 0.6512,
+      "silhouette_score": 0.0005,
+      "pca_pc1_variance": 0.9002
+    },
+    "v6_dual_stream": {
+      "real_fake_centroid_dist": 0.1829126924276352,
+      "nearest_centroid_acc": 0.57875,
+      "knn1_acc": 0.555,
+      "knn3_acc": 0.5575,
+      "knn5_acc": 0.55,
+      "silhouette_score": 0.013630721718072891,
+      "pca_pc1_variance": 0.5449161529541016
+    }
+  },
+  "robustness_evaluation": {
+    "clean": {
+      "v5": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.48790000000000006,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      },
+      "v6": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.6265000000000001,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      }
+    },
+    "jpeg_q50": {
+      "v5": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.48900000000000005,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      },
+      "v6": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.6406999999999998,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      }
+    },
+    "resized_0.5x": {
+      "v5": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.4873,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      },
+      "v6": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.5847,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      }
+    },
+    "mild_blur": {
+      "v5": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.4894,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      },
+      "v6": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "auc": 0.5921000000000001,
+        "tp": 100,
+        "tn": 0,
+        "fp": 100,
+        "fn": 0,
+        "fpr": 1.0,
+        "fnr": 0.0
+      }
+    }
+  }
+}

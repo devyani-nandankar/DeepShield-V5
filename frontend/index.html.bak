@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepShield V5 — Forensic Verification & Multimodal Deepfake Audit</title>
+  <style>
+    :root {
+      --bg-primary: #0a0f1d;
+      --bg-secondary: #111827;
+      --bg-card: #162032;
+      --bg-card-hover: #1c2a42;
+      --border-color: #24354f;
+      --accent-blue: #38bdf8;
+      --accent-indigo: #6366f1;
+      --color-real: #10b981;
+      --color-real-bg: rgba(16, 185, 129, 0.12);
+      --color-real-border: rgba(16, 185, 129, 0.35);
+      --color-fake: #f43f5e;
+      --color-fake-bg: rgba(244, 63, 94, 0.12);
+      --color-fake-border: rgba(244, 63, 94, 0.35);
+      --color-uncertain: #f59e0b;
+      --color-uncertain-bg: rgba(245, 158, 11, 0.12);
+      --color-uncertain-border: rgba(245, 158, 11, 0.35);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-border: rgba(245, 158, 11, 0.35);
+      --warning-text: #fbbf24;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(180deg, #0e172a 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 2rem;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .shield-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+    }
+
+    .shield-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .brand-badge {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-meta strong {
+      color: #fff;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* UPLOAD CARD */
+    .upload-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 3rem 2rem;
+      background: rgba(17, 24, 39, 0.4);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .upload-icon {
+      width: 52px;
+      height: 52px;
+      fill: var(--accent-blue);
+      opacity: 0.85;
+      transition: transform 0.2s ease;
+    }
+
+    .upload-zone:hover .upload-icon {
+      transform: translateY(-4px);
+    }
+
+    .upload-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .upload-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 580px;
+      line-height: 1.45;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      color: #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent-blue);
+      box-shadow: none;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8rem;
+    }
+
+    .quick-samples {
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .quick-samples-label {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-right: 0.25rem;
+    }
+
+    /* LOADING SPINNER */
+    .loading-container {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(56, 189, 248, 0.15);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1.25rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-step {
+      font-size: 1rem;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    /* RESULTS CONTAINER */
+    .results-container {
+      display: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    /* 1. RESULT BANNER */
+    .result-banner {
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      border: 1px solid transparent;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      transition: all 0.3s ease;
+    }
+
+    .result-banner.real {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(17, 24, 39, 0.8) 100%);
+      border-color: var(--color-real-border);
+    }
+
+    .result-banner.fake {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.15) 0%, rgba(17, 24, 39, 0.8) 100%);
+      border-color: var(--color-fake-border);
+    }
+
+    .result-banner.uncertain {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(17, 24, 39, 0.8) 100%);
+      border-color: var(--color-uncertain-border);
+    }
+
+    .verdict-badge-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .verdict-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .real .verdict-tag { color: var(--color-real); }
+    .fake .verdict-tag { color: var(--color-fake); }
+    .uncertain .verdict-tag { color: var(--color-uncertain); }
+
+    .verdict-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .result-metrics {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding-left: 2rem;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .report-actions-top {
+      display: flex;
+      gap: 0.5rem;
+      align-self: center;
+    }
+
+    /* SECTION CARD GENERAL */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.85rem;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* UNCERTAINTY BANNER */
+    .uncertainty-callout {
+      display: none;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .uncertainty-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      color: var(--warning-text);
+      font-size: 0.95rem;
+    }
+
+    .uncertainty-body {
+      font-size: 0.9rem;
+      color: #fef3c7;
+      line-height: 1.5;
+    }
+
+    /* BULLETS LIST */
+    .bullets-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .bullet-icon {
+      min-width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .real-bullet .bullet-icon {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--color-real);
+    }
+
+    .fake-bullet .bullet-icon {
+      background: rgba(244, 63, 94, 0.2);
+      color: var(--color-fake);
+    }
+
+    .uncertain-bullet .bullet-icon {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--color-uncertain);
+    }
+
+    .bullet-icon svg {
+      width: 13px;
+      height: 13px;
+      fill: currentColor;
+    }
+
+    /* MULTIMODAL FUSION PANEL */
+    .fusion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .fusion-card {
+      background: rgba(10, 15, 29, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .fusion-card-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .weight-bar-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .weight-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .weight-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .weight-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-indigo));
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .fusion-alerts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .alert-conflict {
+      background: rgba(244, 63, 94, 0.1);
+      border-left: 3px solid var(--color-fake);
+      padding: 0.6rem 0.85rem;
+      font-size: 0.82rem;
+      color: #fecdd3;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .alert-corroborate {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid var(--color-real);
+      padding: 0.6rem 0.85rem;
+      font-size: 0.82rem;
+      color: #a7f3d0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    /* FORENSIC EVIDENCE MATRIX */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .matrix-card {
+      background: rgba(10, 15, 29, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .matrix-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.5rem;
+    }
+
+    .matrix-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .matrix-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+    }
+
+    .badge-active { background: rgba(16, 185, 129, 0.2); color: var(--color-real); }
+    .badge-inactive { background: rgba(148, 163, 184, 0.15); color: var(--text-dim); }
+
+    .matrix-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .matrix-row strong {
+      color: #f1f5f9;
+      font-family: var(--font-mono);
+    }
+
+    /* VISUAL EVIDENCE GALLERY */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .gallery-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-blue);
+    }
+
+    .gallery-header {
+      padding: 0.75rem 1rem;
+      background: rgba(0, 0, 0, 0.25);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .gallery-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .gallery-badge {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .gallery-img-box {
+      width: 100%;
+      height: 240px;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: zoom-in;
+    }
+
+    .gallery-img-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.25s ease;
+    }
+
+    .gallery-img-box:hover img {
+      transform: scale(1.03);
+    }
+
+    .gallery-desc {
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    /* VIDEO KEYFRAMES CAROUSEL */
+    .video-keyframes-box {
+      display: none;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .keyframes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .keyframe-card {
+      background: rgba(10, 15, 29, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .keyframe-thumb {
+      height: 140px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-in;
+    }
+
+    .keyframe-thumb img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .keyframe-meta {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+
+    .keyframe-meta strong {
+      color: #fff;
+    }
+
+    /* TECHNICAL DETAILS GRID */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .tech-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .tech-key {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .tech-val {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
+    /* FORENSIC REPORT VIEWER ACCORDION */
+    .report-viewer-box {
+      display: none;
+      margin-top: 1rem;
+      background: #050811;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .report-viewer-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .report-content-pre {
+      padding: 1.5rem;
+      max-height: 480px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* DISCLAIMER BANNER */
+    .disclaimer-banner {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .disclaimer-icon {
+      color: var(--warning-text);
+      min-width: 24px;
+      margin-top: 2px;
+    }
+
+    .disclaimer-text {
+      font-size: 0.9rem;
+      color: #fef3c7;
+      line-height: 1.5;
+    }
+
+    .disclaimer-text strong {
+      color: #fff;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      background: #060913;
+    }
+
+    /* LIGHTBOX MODAL */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    @media (max-width: 860px) {
+      .result-banner {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      .result-metrics {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1.25rem;
+      }
+      .report-actions-top {
+        align-self: flex-start;
+      }
+      .header-meta {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="shield-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        </div>
+        <span class="brand-title">DeepShield</span>
+        <span class="brand-badge">V5 MULTIMODAL FORENSICS</span>
+      </div>
+      <div class="header-meta">
+        <span>Backbone: <strong>EfficientNetB2</strong></span>
+        <span>Face Detector: <strong>OpenCV YuNet</strong></span>
+        <span>Resolution: <strong>224×224</strong></span>
+        <span>Decision Threshold: <strong>0.21</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW -->
+  <main>
+
+    <!-- UPLOAD CARD -->
+    <div class="upload-card">
+      <div class="upload-zone" id="dropZone">
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/bmp,video/mp4,video/x-msvideo,video/quicktime,video/x-matroska,.mp4,.avi,.mov,.mkv" style="display: none;" />
+        <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+        <div class="upload-title">Drop an image or video here or click to browse</div>
+        <div class="upload-subtitle">Supports JPG, PNG, WEBP, BMP, MP4, AVI, MOV, MKV • Automated Facial Detection, Temporal Keyframe Analysis & Multimodal Synthesis</div>
+        <button class="btn" id="browseBtn" type="button">Select Media File</button>
+      </div>
+
+      <!-- Quick Test Samples -->
+      <div class="quick-samples">
+        <span class="quick-samples-label">Quick Image Samples:</span>
+        <button class="btn btn-secondary" id="testRealBtn" type="button">Real Sample (real.jpeg)</button>
+        <button class="btn btn-secondary" id="testFakeBtn" type="button">Fake Sample (fake.jpeg)</button>
+      </div>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div class="loading-container" id="loadingContainer">
+      <div class="spinner"></div>
+      <div class="loading-step" id="loadingStep">Executing YuNet neural face detection...</div>
+    </div>
+
+    <!-- RESULTS PRESENTATION -->
+    <div class="results-container" id="resultsContainer" style="display: none;">
+
+      <!-- 1. RESULT BANNER -->
+      <div class="result-banner real" id="resultBanner">
+        <div class="verdict-badge-box">
+          <div class="verdict-tag" id="verdictTag">AUTHENTIC VERIFIED</div>
+          <div class="verdict-title" id="verdictTitle">Real</div>
+        </div>
+        <div class="result-metrics">
+          <div class="metric-item">
+            <div class="metric-label">Multimodal Score</div>
+            <div class="metric-value" id="metricScore">0.0000</div>
+            <div class="metric-sub">Calibrated Threshold: 0.21</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-label">Confidence</div>
+            <div class="metric-value" id="metricConfidence">99.9%</div>
+            <div class="metric-sub">Calibrated scale</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-label">Risk Level</div>
+            <div class="metric-value" id="metricRisk" style="font-size: 1.25rem;">Low</div>
+            <div class="metric-sub">Forensic assessment</div>
+          </div>
+        </div>
+        <div class="report-actions-top">
+          <button class="btn btn-secondary btn-sm" id="toggleReportTopBtn" type="button">Audit Report</button>
+          <button class="btn btn-sm" id="downloadMdTopBtn" type="button">Download (.md)</button>
+        </div>
+      </div>
+
+      <!-- UNCERTAINTY ADVISORY (conditionally displayed) -->
+      <div class="uncertainty-callout" id="uncertaintyCallout">
+        <div class="uncertainty-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          <span id="uncertaintyHeadline">Forensic Uncertainty Detected</span>
+        </div>
+        <div class="uncertainty-body" id="uncertaintyBody">
+          The available evidence is conflicting, insufficient, degraded, or close to the decision boundary, so DeepShield does not force a binary decision.
+        </div>
+      </div>
+
+      <!-- 2. WHY? EXPLANATION CARD -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-number">?</div>
+            <div class="section-title">Why this Result?</div>
+          </div>
+        </div>
+        <ul class="bullets-list" id="bulletsList">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+
+      <!-- 3. MULTIMODAL FUSION & SYNTHESIS PANEL -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-number">A</div>
+            <div class="section-title">Adaptive Multimodal Evidence Fusion</div>
+          </div>
+          <span class="gallery-badge" id="fusionVersionBadge">v5-multimodal</span>
+        </div>
+        <div class="fusion-grid">
+          <div class="fusion-card">
+            <div class="fusion-card-title">
+              <span>Modality Synthesis Weights</span>
+            </div>
+            <div class="weight-bar-box">
+              <div class="weight-label">
+                <span>Image Reliability</span>
+                <span id="weightImgVal">1.00</span>
+              </div>
+              <div class="weight-track"><div class="weight-fill" id="weightImgBar" style="width: 100%;"></div></div>
+            </div>
+            <div class="weight-bar-box">
+              <div class="weight-label">
+                <span>Video Reliability</span>
+                <span id="weightVidVal">0.00</span>
+              </div>
+              <div class="weight-track"><div class="weight-fill" id="weightVidBar" style="width: 0%;"></div></div>
+            </div>
+            <div class="weight-bar-box">
+              <div class="weight-label">
+                <span>Metadata Context</span>
+                <span id="weightMetaVal">0.15</span>
+              </div>
+              <div class="weight-track"><div class="weight-fill" id="weightMetaBar" style="width: 15%;"></div></div>
+            </div>
+          </div>
+          <div class="fusion-card">
+            <div class="fusion-card-title">
+              <span>Coherence & Conflict Audit</span>
+            </div>
+            <div class="fusion-alerts" id="fusionAlerts">
+              <div class="alert-corroborate" id="coherenceMsg">All available evidence modalities concordantly support the final verdict.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. FORENSIC EVIDENCE MATRIX -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-number">B</div>
+            <div class="section-title">Forensic Evidence Matrix</div>
+          </div>
+        </div>
+        <div class="matrix-grid">
+          <!-- Image Evidence Card -->
+          <div class="matrix-card">
+            <div class="matrix-header">
+              <span class="matrix-name">Image Spatial Neural</span>
+              <span class="matrix-badge" id="matImgBadge">Active</span>
+            </div>
+            <div class="matrix-row"><span>Face Localized:</span><strong id="matImgFace">Yes</strong></div>
+            <div class="matrix-row"><span>Face Confidence:</span><strong id="matImgFaceConf">N/A</strong></div>
+            <div class="matrix-row"><span>Raw Model Score:</span><strong id="matImgScore">0.0000</strong></div>
+            <div class="matrix-row"><span>Grad-CAM Activation:</span><strong id="matImgGradcam">Available</strong></div>
+          </div>
+
+          <!-- Video Evidence Card -->
+          <div class="matrix-card">
+            <div class="matrix-header">
+              <span class="matrix-name">Video Temporal & Quality</span>
+              <span class="matrix-badge" id="matVidBadge">Inactive</span>
+            </div>
+            <div class="matrix-row"><span>Frames Sampled:</span><strong id="matVidFrames">N/A</strong></div>
+            <div class="matrix-row"><span>Phase 1 (Med/P75):</span><strong id="matVidMedian">N/A</strong></div>
+            <div class="matrix-row"><span>V5.2 Temporal:</span><strong id="matVidTemporal">N/A</strong></div>
+            <div class="matrix-row"><span>Temporal Volatility:</span><strong id="matVidVolatility">N/A</strong></div>
+            <div class="matrix-row"><span>Compression Degradation:</span><strong id="matVidCompression">No</strong></div>
+          </div>
+
+          <!-- Metadata Evidence Card -->
+          <div class="matrix-card">
+            <div class="matrix-header">
+              <span class="matrix-name">Metadata & Provenance</span>
+              <span class="matrix-badge" id="matMetaBadge">Active</span>
+            </div>
+            <div class="matrix-row"><span>Container / Format:</span><strong id="matMetaFormat">JPEG</strong></div>
+            <div class="matrix-row"><span>EXIF Header:</span><strong id="matMetaExif">Present</strong></div>
+            <div class="matrix-row"><span>Camera Hardware:</span><strong id="matMetaCamera">None</strong></div>
+            <div class="matrix-row"><span>Editing Software:</span><strong id="matMetaEditing">None</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. VISUAL EVIDENCE GALLERY -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-number">C</div>
+            <div class="section-title">Visual Evidence & Attribution Maps</div>
+          </div>
+        </div>
+        <div class="gallery-grid" id="galleryGrid">
+          <!-- Card 1: Original Image -->
+          <div class="gallery-card">
+            <div class="gallery-header">
+              <span class="gallery-title">1. Original Input</span>
+              <span class="gallery-badge" id="origResBadge">Source</span>
+            </div>
+            <div class="gallery-img-box" onclick="openLightbox('origImg')">
+              <img id="origImg" src="" alt="Original Media" />
+            </div>
+            <div class="gallery-desc">Full unprocessed media submitted for authenticity verification.</div>
+          </div>
+
+          <!-- Card 2: YuNet Detected Face -->
+          <div class="gallery-card">
+            <div class="gallery-header">
+              <span class="gallery-title">2. YuNet Detected Face</span>
+              <span class="gallery-badge" id="faceConfBadge">Face Crop</span>
+            </div>
+            <div class="gallery-img-box" onclick="openLightbox('faceCropImg')">
+              <img id="faceCropImg" src="" alt="YuNet Detected Face" />
+            </div>
+            <div class="gallery-desc">Square 1:1 face crop isolated with safety margin for facial boundary artifact analysis.</div>
+          </div>
+
+          <!-- Card 3: Grad-CAM Heatmap -->
+          <div class="gallery-card">
+            <div class="gallery-header">
+              <span class="gallery-title">3. Grad-CAM Heatmap</span>
+              <span class="gallery-badge">JET Saliency</span>
+            </div>
+            <div class="gallery-img-box" onclick="openLightbox('heatmapImg')">
+              <img id="heatmapImg" src="" alt="Grad-CAM Heatmap" />
+            </div>
+            <div class="gallery-desc">Neural gradient activation map highlighting visual regions that influenced the decision.</div>
+          </div>
+
+          <!-- Card 4: Grad-CAM Overlay -->
+          <div class="gallery-card">
+            <div class="gallery-header">
+              <span class="gallery-title">4. Grad-CAM Overlay</span>
+              <span class="gallery-badge">Blend</span>
+            </div>
+            <div class="gallery-img-box" onclick="openLightbox('overlayImg')">
+              <img id="overlayImg" src="" alt="Grad-CAM Overlay" />
+            </div>
+            <div class="gallery-desc">Blended attribution map overlaying neural attention directly onto the localized face.</div>
+          </div>
+        </div>
+
+        <!-- Video Suspicious Keyframes Container -->
+        <div class="video-keyframes-box" id="videoKeyframesBox">
+          <div class="section-title-wrap" style="margin-top: 1rem;">
+            <span class="gallery-title" style="font-size: 0.95rem;">Most Suspicious Video Keyframes:</span>
+          </div>
+          <div class="keyframes-grid" id="keyframesGrid">
+            <!-- Dynamically populated if video -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. TECHNICAL DETAILS -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-number">D</div>
+            <div class="section-title">Technical Specifications & Architecture</div>
+          </div>
+        </div>
+        <div class="tech-grid" id="techGrid">
+          <div class="tech-item">
+            <div class="tech-key">Face Detector</div>
+            <div class="tech-val" id="techFaceDetector">OpenCV YuNet</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-key">Model Backbone</div>
+            <div class="tech-val" id="techModel">DeepShield V5 / EfficientNetB2</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-key">Input Resolution</div>
+            <div class="tech-val" id="techInputRes">224 × 224 × 3</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-key">Model Raw / Fused Score</div>
+            <div class="tech-val" id="techScore">0.0000</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-key">Calibrated Threshold</div>
+            <div class="tech-val" id="techThreshold">0.21</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-key">Grad-CAM Target Layer</div>
+            <div class="tech-val" id="techLayer">efficientnetb2/top_conv</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-key">Face Detection Confidence</div>
+            <div class="tech-val" id="techFaceConf">94.2%</div>
+          </div>
+          <div class="tech-item">
+            <div class="tech-key">Benchmark ROC-AUC</div>
+            <div class="tech-val">83.30% (F1: 0.8771)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. STRUCTURED FORENSIC REPORT ACTIONS & VIEWER -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-number">E</div>
+            <div class="section-title">Forensic Audit Report Export</div>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-secondary btn-sm" id="toggleReportBtn" type="button">View Report Text</button>
+            <button class="btn btn-secondary btn-sm" id="downloadJsonBtn" type="button">Export JSON</button>
+            <button class="btn btn-sm" id="downloadMdBtn" type="button">Export Markdown (.md)</button>
+          </div>
+        </div>
+
+        <div class="report-viewer-box" id="reportViewerBox">
+          <div class="report-viewer-tabs">
+            <button class="tab-btn active" id="tabMdBtn" type="button">Markdown View</button>
+            <button class="tab-btn" id="tabJsonBtn" type="button">Raw JSON</button>
+          </div>
+          <pre class="report-content-pre" id="reportContentPre">Forensic report will be displayed here...</pre>
+        </div>
+      </div>
+
+      <!-- 8. IMPORTANT NOTE / DISCLAIMER -->
+      <div class="disclaimer-banner">
+        <div class="disclaimer-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        </div>
+        <div class="disclaimer-text">
+          <strong>Responsible AI Notice:</strong>
+          This is an AI-based assessment, not absolute proof of authenticity.
+          The highlighted regions show areas that influenced the model's decision.
+          Metadata integrity and compression indicators provide supporting context only and cannot alone prove or disprove digital manipulation.
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" type="button">&times;</button>
+    <img id="lightboxImg" src="" alt="Enlarged Visual Evidence" />
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    DeepShield V5 — Explainable Multimodal Deepfake Detection & Digital Media Authenticity Verification Platform
+  </footer>
+
+  <script>
+    // Null-safe numerical and percentage formatters
+    function safeFixed(val, digits = 4, fallback = "N/A") {
+      if (val === null || val === undefined || val === "") return fallback;
+      const num = Number(val);
+      if (isNaN(num) || !isFinite(num)) return fallback;
+      return num.toFixed(digits);
+    }
+
+    function safePercent(val, digits = 1, fallback = "N/A") {
+      if (val === null || val === undefined || val === "") return fallback;
+      const num = Number(val);
+      if (isNaN(num) || !isFinite(num)) return fallback;
+      return (num * 100).toFixed(digits) + "%";
+    }
+
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+    const browseBtn = document.getElementById("browseBtn");
+    const loadingContainer = document.getElementById("loadingContainer");
+    const loadingStep = document.getElementById("loadingStep");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const testRealBtn = document.getElementById("testRealBtn");
+    const testFakeBtn = document.getElementById("testFakeBtn");
+
+    let currentReportObj = null;
+    let currentReportMd = "";
+
+    // UI Click triggers
+    browseBtn.addEventListener("click", () => fileInput.click());
+    dropZone.addEventListener("click", (e) => {
+      if (e.target !== browseBtn) fileInput.click();
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleFileSubmission(e.target.files[0]);
+      }
+    });
+
+    // Drag and drop handlers
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFileSubmission(e.dataTransfer.files[0]);
+      }
+    });
+
+    // Quick Test button handlers
+    testRealBtn.addEventListener("click", () => analyzeServerSample("real.jpeg"));
+    testFakeBtn.addEventListener("click", () => analyzeServerSample("fake.jpeg"));
+
+    // Report viewing & download triggers
+    const toggleReportBtn = document.getElementById("toggleReportBtn");
+    const toggleReportTopBtn = document.getElementById("toggleReportTopBtn");
+    const reportViewerBox = document.getElementById("reportViewerBox");
+    const reportContentPre = document.getElementById("reportContentPre");
+    const tabMdBtn = document.getElementById("tabMdBtn");
+    const tabJsonBtn = document.getElementById("tabJsonBtn");
+    const downloadJsonBtn = document.getElementById("downloadJsonBtn");
+    const downloadMdBtn = document.getElementById("downloadMdBtn");
+    const downloadMdTopBtn = document.getElementById("downloadMdTopBtn");
+
+    function toggleReportViewer() {
+      if (reportViewerBox.style.display === "block") {
+        reportViewerBox.style.display = "none";
+      } else {
+        reportViewerBox.style.display = "block";
+        showReportTab("md");
+      }
+    }
+    toggleReportBtn.addEventListener("click", toggleReportViewer);
+    toggleReportTopBtn.addEventListener("click", () => {
+      reportViewerBox.style.display = "block";
+      showReportTab("md");
+      reportViewerBox.scrollIntoView({ behavior: "smooth" });
+    });
+
+    function showReportTab(tab) {
+      if (tab === "md") {
+        tabMdBtn.classList.add("active");
+        tabJsonBtn.classList.remove("active");
+        reportContentPre.innerText = currentReportMd || (currentReportObj ? currentReportObj.report_text : "No report loaded.");
+      } else {
+        tabJsonBtn.classList.add("active");
+        tabMdBtn.classList.remove("active");
+        reportContentPre.innerText = currentReportObj ? JSON.stringify(currentReportObj, null, 2) : "No report loaded.";
+      }
+    }
+    tabMdBtn.addEventListener("click", () => showReportTab("md"));
+    tabJsonBtn.addEventListener("click", () => showReportTab("json"));
+
+    function downloadBlob(content, filename, mime) {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportReportJson() {
+      if (!currentReportObj) return;
+      const rid = currentReportObj.report_id || "deepshield_report";
+      downloadBlob(JSON.stringify(currentReportObj, null, 2), rid + ".json", "application/json");
+    }
+    function exportReportMd() {
+      if (!currentReportObj && !currentReportMd) return;
+      const rid = currentReportObj ? currentReportObj.report_id : "deepshield_report";
+      const md = currentReportMd || currentReportObj.report_text || "";
+      downloadBlob(md, rid + ".md", "text/markdown;charset=utf-8");
+    }
+
+    downloadJsonBtn.addEventListener("click", exportReportJson);
+    downloadMdBtn.addEventListener("click", exportReportMd);
+    downloadMdTopBtn.addEventListener("click", exportReportMd);
+
+    async function analyzeServerSample(sampleName) {
+      showLoading(true, "Fetching sample: " + sampleName + "...");
+      try {
+        const res = await fetch("/api/sample/" + sampleName);
+        if (!res.ok) throw new Error("Failed to load sample file " + sampleName);
+        const blob = await res.blob();
+        const file = new File([blob], sampleName, { type: "image/jpeg" });
+        await handleFileSubmission(file);
+      } catch (err) {
+        alert("Error analyzing sample: " + err.message);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function isVideoFile(file) {
+      const name = file.name.toLowerCase();
+      return name.endsWith(".mp4") || name.endsWith(".avi") || name.endsWith(".mov") || name.endsWith(".mkv") || file.type.startsWith("video/");
+    }
+
+    async function handleFileSubmission(file) {
+      const isVideo = isVideoFile(file);
+      showLoading(true, isVideo ? "Analyzing video stream and sampling keyframes..." : "Localizing facial landmarks via OpenCV YuNet...");
+
+      const formData = new FormData();
+      formData.append(isVideo ? "video" : "image", file);
+
+      try {
+        const endpoint = isVideo ? "/api/predict/video" : "/api/predict/image";
+        loadingStep.innerText = isVideo
+          ? "Sampling 1-in-10 frames, computing temporal consistency and quality metrics..."
+          : "Extracting facial features and computing EfficientNetB2 inference...";
+
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errJson = await response.json().catch(() => ({}));
+          throw new Error(errJson.error?.message || errJson.message || ("HTTP " + response.status));
+        }
+
+        const predictionData = await response.json();
+
+        // Generate full forensic report via /api/report
+        loadingStep.innerText = "Synthesizing multimodal evidence and generating forensic audit report...";
+        const reportResp = await fetch("/api/report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prediction_result: predictionData })
+        });
+
+        let reportData = null;
+        if (reportResp.ok) {
+          reportData = await reportResp.json();
+        }
+
+        // Fetch Markdown version
+        const mdResp = await fetch("/api/report?format=markdown", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prediction_result: predictionData })
+        });
+        if (mdResp.ok) {
+          currentReportMd = await mdResp.text();
+        } else if (reportData && reportData.report_text) {
+          currentReportMd = reportData.report_text;
+        }
+
+        currentReportObj = reportData;
+        renderResults(predictionData, reportData);
+
+      } catch (err) {
+        alert("Inference / Audit Error: " + err.message);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function showLoading(isLoading, stepText) {
+      if (isLoading) {
+        loadingContainer.style.display = "block";
+        resultsContainer.style.display = "none";
+        loadingStep.innerText = stepText || "Processing...";
+        window.scrollTo({ top: loadingContainer.offsetTop - 50, behavior: "smooth" });
+      } else {
+        loadingContainer.style.display = "none";
+      }
+    }
+
+    function renderResults(predData, reportData) {
+      resultsContainer.style.display = "flex";
+
+      const fusion = (reportData && reportData.multimodal_fusion) || predData.fusion || {};
+      const verdict = reportData ? reportData.verdict : (predData.verdict || predData.prediction || "Real");
+      const conf = reportData ? reportData.confidence : (predData.confidence ?? 0.5);
+      const scoreVal = fusion.fusion_score ?? predData.median_score ?? predData.score ?? 0.0;
+      const risk = reportData ? reportData.risk_level : (fusion.risk_level || "Moderate");
+
+      // 1. RESULT BANNER
+      const banner = document.getElementById("resultBanner");
+      banner.className = "result-banner " + (verdict === "Likely Fake" || verdict === "Fake" ? "fake" : (verdict === "Uncertain" ? "uncertain" : "real"));
+
+      const tagText = verdict === "Uncertain" ? "INCONCLUSIVE / UNCERTAIN" : (verdict === "Likely Fake" || verdict === "Fake" ? "PREDICTED MANIPULATION" : "AUTHENTIC VERIFIED");
+      document.getElementById("verdictTag").innerText = tagText;
+      document.getElementById("verdictTitle").innerText = verdict;
+      document.getElementById("metricScore").innerText = safeFixed(scoreVal, 4, "N/A");
+      document.getElementById("metricConfidence").innerText = safePercent(conf, 1, "N/A");
+      document.getElementById("metricRisk").innerText = risk;
+
+      // UNCERTAINTY CALLOUT
+      const uncCallout = document.getElementById("uncertaintyCallout");
+      const uncData = reportData ? reportData.uncertainty : {};
+      if (verdict === "Uncertain" || uncData.is_uncertain || uncData.is_within_boundary_window) {
+        uncCallout.style.display = "flex";
+        const distText = safeFixed(uncData.score_distance_from_threshold, 4, "0.0000");
+        document.getElementById("uncertaintyHeadline").innerText = "Forensic Uncertainty Notice — Distance from Threshold: " + distText;
+        document.getElementById("uncertaintyBody").innerText = uncData.advisory || uncData.uncertainty_reason || "The available evidence is conflicting, insufficient, degraded, or close to the decision boundary, so DeepShield does not force a binary decision.";
+      } else {
+        uncCallout.style.display = "none";
+      }
+
+      // 2. WHY? BULLETS
+      const bulletsList = document.getElementById("bulletsList");
+      bulletsList.innerHTML = "";
+      const bullets = [];
+
+      if (reportData && reportData.summary) {
+        const s = reportData.summary;
+        if (s.why_result) bullets.push(s.why_result);
+        if (s.visual_evidence) bullets.push(s.visual_evidence);
+        if (s.metadata_evidence) bullets.push(s.metadata_evidence);
+        if (s.responsible_ai_statement) bullets.push(s.responsible_ai_statement);
+      } else if (predData.bullets) {
+        predData.bullets.forEach(b => bullets.push(b));
+      } else if (predData.explanation) {
+        bullets.push(predData.explanation);
+      }
+
+      bullets.forEach(txt => {
+        const li = document.createElement("li");
+        const bClass = verdict === "Likely Fake" || verdict === "Fake" ? "fake-bullet" : (verdict === "Uncertain" ? "uncertain-bullet" : "real-bullet");
+        li.className = "bullet-item " + bClass;
+        li.innerHTML = `
+          <div class="bullet-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          </div>
+          <div>${txt}</div>
+        `;
+        bulletsList.appendChild(li);
+      });
+
+      // 3. MULTIMODAL FUSION PANEL
+      const relWeights = fusion.reliability_weights || fusion.adaptive_reliability || {};
+      const imgW = relWeights.image_weight ?? (reportData?.evidence?.image_evidence?.evidence_available ? 1.0 : 0.0);
+      const vidW = relWeights.video_weight ?? (reportData?.evidence?.video_evidence?.evidence_available ? 0.9 : 0.0);
+      const metaW = relWeights.metadata_weight ?? 0.15;
+
+      document.getElementById("weightImgVal").innerText = safeFixed(imgW, 2, "0.00");
+      document.getElementById("weightImgBar").style.width = isFinite(Number(imgW)) ? (Math.max(0, Math.min(1, Number(imgW))) * 100) + "%" : "0%";
+      document.getElementById("weightVidVal").innerText = safeFixed(vidW, 2, "0.00");
+      document.getElementById("weightVidBar").style.width = isFinite(Number(vidW)) ? (Math.max(0, Math.min(1, Number(vidW))) * 100) + "%" : "0%";
+      document.getElementById("weightMetaVal").innerText = safeFixed(metaW, 2, "0.00");
+      document.getElementById("weightMetaBar").style.width = isFinite(Number(metaW)) ? (Math.max(0, Math.min(1, Number(metaW))) * 100) + "%" : "0%";
+
+      const fusionAlerts = document.getElementById("fusionAlerts");
+      fusionAlerts.innerHTML = "";
+      if (fusion.conflict_detected && fusion.conflict_factors && fusion.conflict_factors.length > 0) {
+        fusion.conflict_factors.forEach(cf => {
+          const div = document.createElement("div");
+          div.className = "alert-conflict";
+          div.innerText = "⚠️ Conflict: " + cf;
+          fusionAlerts.appendChild(div);
+        });
+      }
+      if (fusion.corroborating_factors && fusion.corroborating_factors.length > 0) {
+        fusion.corroborating_factors.forEach(corr => {
+          const div = document.createElement("div");
+          div.className = "alert-corroborate";
+          div.innerText = "✓ " + corr;
+          fusionAlerts.appendChild(div);
+        });
+      }
+      if (fusionAlerts.children.length === 0) {
+        const div = document.createElement("div");
+        div.className = "alert-corroborate";
+        div.innerText = "✓ Modality evidence streams align concordantly with the calibrated threshold.";
+        fusionAlerts.appendChild(div);
+      }
+
+      // 4. FORENSIC EVIDENCE MATRIX
+      const imgEv = reportData ? reportData.evidence?.image_evidence : {};
+      const vidEv = reportData ? reportData.evidence?.video_evidence : {};
+      const metaEv = reportData ? reportData.evidence?.metadata_evidence : {};
+
+      // Image
+      const isImgActive = Boolean(imgEv?.evidence_available ?? (predData.media_type !== "video"));
+      document.getElementById("matImgBadge").className = "matrix-badge " + (isImgActive ? "badge-active" : "badge-inactive");
+      document.getElementById("matImgBadge").innerText = isImgActive ? "Active" : "Omitted";
+      document.getElementById("matImgFace").innerText = (imgEv?.face_detected !== undefined && imgEv?.face_detected !== null)
+        ? (imgEv.face_detected ? "Yes (" + (imgEv.face_count || 1) + ")" : "No")
+        : (predData.face_detected ? "Yes" : "No");
+
+      let faceConfText = "None";
+      if (predData.faces && predData.faces[0] && predData.faces[0].score !== undefined && predData.faces[0].score !== null) {
+        faceConfText = safePercent(predData.faces[0].score, 1, "High");
+      } else if (imgEv?.face_confidence !== undefined && imgEv?.face_confidence !== null) {
+        faceConfText = safePercent(imgEv.face_confidence, 1, "High");
+      } else if (predData.face_detected) {
+        faceConfText = "High";
+      }
+      document.getElementById("matImgFaceConf").innerText = faceConfText;
+
+      const rawImgScore = isImgActive ? (imgEv?.model_score ?? predData.score) : null;
+      document.getElementById("matImgScore").innerText = isImgActive ? safeFixed(rawImgScore, 4, "N/A") : "N/A";
+      document.getElementById("matImgGradcam").innerText = (imgEv?.gradcam?.available || predData.gradcam?.available) ? "Generated" : "N/A";
+
+      // Video
+      const isVidActive = Boolean(vidEv?.evidence_available ?? (predData.media_type === "video"));
+      document.getElementById("matVidBadge").className = "matrix-badge " + (isVidActive ? "badge-active" : "badge-inactive");
+      document.getElementById("matVidBadge").innerText = isVidActive ? "Active" : "Omitted";
+      document.getElementById("matVidFrames").innerText = isVidActive ? ((vidEv?.frames_analyzed ?? predData.frames_analyzed ?? 0) + " keyframes") : "N/A";
+
+      const vidMedScore = vidEv?.median_score ?? predData.median_score;
+      const vidP75Score = vidEv?.p75_score ?? predData.p75_score;
+      document.getElementById("matVidMedian").innerText = isVidActive
+        ? (safeFixed(vidMedScore, 4, "N/A") + " / " + safeFixed(vidP75Score, 4, "N/A"))
+        : "N/A";
+
+      const v52Ev = predData.v5_2_temporal_evidence || vidEv?.v5_2_temporal_evidence || predData.temporal_evidence;
+      const tScore = v52Ev ? v52Ev.temporal_score : null;
+      const tThresh = v52Ev ? (v52Ev.temporal_threshold || 0.30) : 0.30;
+      const tPred = v52Ev ? v52Ev.prediction : null;
+      const tElem = document.getElementById("matVidTemporal");
+      if (tElem) {
+        tElem.innerText = isVidActive && tScore !== null
+          ? `${tPred || "Active"} (${safeFixed(tScore, 4)}, Thresh: ${safeFixed(tThresh, 2)})`
+          : "N/A";
+      }
+
+      const vidVol = vidEv?.temporal_volatility ?? predData.temporal_volatility;
+      document.getElementById("matVidVolatility").innerText = isVidActive ? safeFixed(vidVol, 4, "N/A") : "N/A";
+      document.getElementById("matVidCompression").innerText = isVidActive
+        ? ((vidEv?.compression_degradation || predData.compression_degradation) ? "Degraded (Downweighted)" : "Clean")
+        : "N/A";
+
+      // Metadata
+      const isMetaActive = Boolean(metaEv?.evidence_available || predData.metadata);
+      document.getElementById("matMetaBadge").className = "matrix-badge " + (isMetaActive ? "badge-active" : "badge-inactive");
+      document.getElementById("matMetaBadge").innerText = isMetaActive ? "Active" : "Omitted";
+      document.getElementById("matMetaFormat").innerText = metaEv?.file_format || predData.metadata?.format || "Unknown";
+      document.getElementById("matMetaExif").innerText = (metaEv?.exif_present || predData.metadata?.has_exif) ? "Present" : "Missing / Web Stripped";
+      const camMake = metaEv?.camera_hardware?.make || predData.metadata?.camera_make || "";
+      const camModel = metaEv?.camera_hardware?.model || predData.metadata?.camera_model || "";
+      document.getElementById("matMetaCamera").innerText = (camMake || camModel) ? (camMake + " " + camModel).trim() : "None";
+      const editSw = metaEv?.editing_software?.name || predData.metadata?.software || predData.metadata?.editing_software_name || "";
+      document.getElementById("matMetaEditing").innerText = editSw || "None Detected";
+
+      // 5. VISUAL EVIDENCE
+      const vis = predData.visual_evidence || (reportData ? reportData.visualization_paths : {});
+      const gradcam = predData.gradcam || {};
+
+      document.getElementById("origImg").src = vis.original_image_url || vis.original_url || "";
+      document.getElementById("faceCropImg").src = vis.face_crop_url || "";
+      document.getElementById("heatmapImg").src = vis.heatmap_url || gradcam.heatmap_url || "";
+      document.getElementById("overlayImg").src = vis.overlay_url || gradcam.overlay_url || "";
+
+      // Video Suspicious Keyframes
+      const kfBox = document.getElementById("videoKeyframesBox");
+      const kfGrid = document.getElementById("keyframesGrid");
+      kfGrid.innerHTML = "";
+      if (isVidActive && predData.suspicious_frames && predData.suspicious_frames.length > 0) {
+        kfBox.style.display = "flex";
+        predData.suspicious_frames.forEach((sf, idx) => {
+          const card = document.createElement("div");
+          card.className = "keyframe-card";
+          const cropUrl = sf.crop_url || sf.frame_url || "";
+          card.innerHTML = `
+            <div class="keyframe-thumb" onclick="openLightboxSrc('${cropUrl}')">
+              <img src="${cropUrl}" alt="Keyframe #${sf.frame_number ?? (idx + 1)}" />
+            </div>
+            <div class="keyframe-meta">
+              <span>Frame #${sf.frame_number ?? (idx + 1)}</span>
+              <strong>Score: ${safeFixed(sf.model_score, 4, "N/A")}</strong>
+            </div>
+          `;
+          kfGrid.appendChild(card);
+        });
+      } else {
+        kfBox.style.display = "none";
+      }
+
+      // 6. TECHNICAL DETAILS
+      const tech = (reportData && reportData.technical_details) || predData.technical_details || {};
+      document.getElementById("techFaceDetector").innerText = tech.face_detector || "OpenCV YuNet (1:1 Square Crop)";
+      document.getElementById("techModel").innerText = tech.model_name || tech.model || "DeepShield V5 / EfficientNetB2";
+      document.getElementById("techInputRes").innerText = tech.input_resolution || "224 × 224 × 3";
+      document.getElementById("techScore").innerText = safeFixed(scoreVal, 4, "N/A");
+      document.getElementById("techThreshold").innerText = isVidActive
+        ? "0.30 (V5.2 Temporal) / 0.21 (Phase 1 & Image)"
+        : safeFixed(tech.calibrated_threshold, 2, "0.21");
+      document.getElementById("techLayer").innerText = tech.gradcam_target_layer || "efficientnetb2/top_conv";
+      document.getElementById("techFaceConf").innerText = tech.face_detection_confidence || (predData.face_detected ? "Localized" : "General Context");
+
+      // Update Report Viewer Content
+      if (currentReportObj) {
+        showReportTab("md");
+      }
+
+      // Scroll smoothly to results
+      window.scrollTo({ top: banner.offsetTop - 30, behavior: "smooth" });
+    }
+
+    // Lightbox modal helpers
+    function openLightbox(imgId) {
+      const src = document.getElementById(imgId).src;
+      if (src && !src.endsWith("/")) {
+        openLightboxSrc(src);
+      }
+    }
+
+    function openLightboxSrc(src) {
+      if (src) {
+        document.getElementById("lightboxImg").src = src;
+        document.getElementById("lightbox").classList.add("active");
+      }
+    }
+
+    function closeLightbox() {
+      document.getElementById("lightbox").classList.remove("active");
+    }
+  </script>
+</body>
+</html>

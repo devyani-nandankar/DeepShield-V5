@@ -1,0 +1,8 @@
+# DeepShield V5 - Backend Dependencies
+Flask>=2.2.0
+flask-cors>=3.0.10
+tensorflow>=2.15.0
+opencv-python>=4.8.0
+Pillow>=9.5.0
+numpy>=1.24.0
+werkzeug>=2.2.0

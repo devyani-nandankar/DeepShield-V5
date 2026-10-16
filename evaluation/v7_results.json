@@ -1,0 +1,68 @@
+{
+  "model_name": "DeepShield V7 Image Metric-Learning",
+  "timestamp": "2026-09-21 12:56:17",
+  "v5_baseline": {
+    "accuracy": 0.8105,
+    "precision": 0.8385,
+    "recall": 0.9174,
+    "f1": 0.8762,
+    "roc_auc": 0.8366,
+    "fp": 477,
+    "fn": 223,
+    "real_fpr": 0.4793969849246231,
+    "fake_fnr": 0.0826538176426983
+  },
+  "v7_test_results_021": {
+    "accuracy": 0.776875169239101,
+    "precision": 0.7731508444962143,
+    "recall": 0.9833333333333333,
+    "f1": 0.8656667753505054,
+    "roc_auc": 0.8535226213121481,
+    "tp": 2655,
+    "tn": 214,
+    "fp": 779,
+    "fn": 45,
+    "real_fpr": 0.7844914400805639,
+    "fake_fnr": 0.016666666666666666
+  },
+  "v7_test_results_best_thresh": {
+    "threshold": 0.31,
+    "accuracy": 0.8142431627403195,
+    "precision": 0.8413559322033898,
+    "recall": 0.9192592592592592,
+    "f1": 0.8785840707964602,
+    "tp": 2482,
+    "tn": 525,
+    "fp": 468,
+    "fn": 218
+  },
+  "feature_separability_comparison": {
+    "v5_centroid_dist": 0.0027,
+    "v7_centroid_dist": 0.3380123972892761,
+    "v5_nc_accuracy": 0.5275,
+    "v7_nc_accuracy": 0.6,
+    "v5_knn1_accuracy": 0.6512,
+    "v7_knn1_accuracy": 1.0,
+    "v5_knn3_accuracy": 0.6538,
+    "v7_knn3_accuracy": 0.83375,
+    "v5_knn5_accuracy": 0.655,
+    "v7_knn5_accuracy": 0.775,
+    "v5_silhouette": 0.0005,
+    "v7_silhouette": 0.030901817604899406,
+    "v7_dist_fp_tn": 0.9308781623840332,
+    "v7_dist_fn_tp": 1.325546145439148,
+    "v7_pca_variance_top5": [
+      0.5246995091438293,
+      0.029926786199212074,
+      0.01960177905857563,
+      0.018788250163197517,
+      0.014992340467870235
+    ]
+  },
+  "hard_negative_performance": {
+    "hard_negative_real_acc": 0.527,
+    "hard_negative_real_fake_rate": 0.473,
+    "hard_negative_fake_acc": 0.999,
+    "hard_negative_fake_real_rate": 0.001
+  }
+}

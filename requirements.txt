@@ -1,0 +1,24 @@
+# Core Machine Learning & Computer Vision
+torch
+torchvision
+torchaudio
+opencv-python
+numpy
+pillow
+timm
+
+# Web Backend / API
+flask
+flask-cors
+werkzeug
+
+# Visualization & Explainability
+matplotlib
+scikit-learn
+grad-cam
+
+# Utilities
+tqdm
+requests
+python-dotenv
+pytest

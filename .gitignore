@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# DeepShield runtime data & uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/outputs/*
+!backend/outputs/.gitkeep
+
+# Evaluation datasets (large files)
+evaluation/test_images/*
+!evaluation/test_images/.gitkeep
+evaluation/test_videos/*
+!evaluation/test_videos/.gitkeep
+
+# Model weights
+*.pt
+*.pth
+*.onnx
+models/*
+!models/yunet/
+!models/yunet/.gitkeep
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+Kaggle_Transfer/
+kaggle_training_script_dataset/
+scratch/
+Metadata/
+models/
+backend/uploads/
+__pycache__/
+.venv/
+venv/
+.env
+*.keras
+*.h5
+*.onnx
+
+# Generated V7 evaluation cache
+evaluation/v7_cache/

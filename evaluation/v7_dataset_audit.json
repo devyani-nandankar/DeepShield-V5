@@ -1,0 +1,73 @@
+{
+  "dataset_name": "DeepShield V7 Targeted Metric-Learning Dataset",
+  "total_samples": 10000,
+  "class_counts": {
+    "real": 5000,
+    "fake": 5000
+  },
+  "category_counts": {
+    "STANDARD_REAL": 4000,
+    "HARD_NEGATIVE_REAL": 1000,
+    "STANDARD_FAKE": 4000,
+    "HARD_NEGATIVE_FAKE": 1000
+  },
+  "source_distribution": {
+    "Deepfake-Videos-Merged": 3740,
+    "FF-C23": 3293,
+    "FaceForensics-1000": 2967
+  },
+  "video_group_count": 4263,
+  "integrity_verification": {
+    "missing_files": 0,
+    "unreadable_images": 0,
+    "duplicate_files": 850,
+    "cross_split_test_leakage": 0,
+    "cross_split_val_leakage": 0,
+    "identity_match_available": false,
+    "total_pairs_generated": 5000,
+    "hard_negative_pairs": 1000,
+    "unmatched_pairs": 4000
+  },
+  "category_feature_distributions": {
+    "STANDARD_REAL": {
+      "count": 4000,
+      "sharpness_mean": 88.99166247214988,
+      "sharpness_std": 54.56084457827611,
+      "sharpness_median": 76.33104891500986,
+      "hf_energy_mean": 0.003102409158018368,
+      "hf_energy_median": 0.00292962393723425,
+      "brightness_mean": 106.62951788205517,
+      "face_area_mean": 1.0
+    },
+    "HARD_NEGATIVE_REAL": {
+      "count": 1000,
+      "sharpness_mean": 204.35437906527568,
+      "sharpness_std": 163.93515043451728,
+      "sharpness_median": 156.1978640733089,
+      "hf_energy_mean": 0.006347235909546676,
+      "hf_energy_median": 0.00534553709439925,
+      "brightness_mean": 105.26887332589286,
+      "face_area_mean": 1.0
+    },
+    "STANDARD_FAKE": {
+      "count": 4000,
+      "sharpness_mean": 105.57375490523349,
+      "sharpness_std": 92.60155988287386,
+      "sharpness_median": 80.42394219791328,
+      "hf_energy_mean": 0.0037606129978666526,
+      "hf_energy_median": 0.0032299907179549,
+      "brightness_mean": 104.25779243064413,
+      "face_area_mean": 1.0
+    },
+    "HARD_NEGATIVE_FAKE": {
+      "count": 1000,
+      "sharpness_mean": 59.0818627704587,
+      "sharpness_std": 61.23864066605348,
+      "sharpness_median": 41.65273049512241,
+      "hf_energy_mean": 0.0027400589811731537,
+      "hf_energy_median": 0.00182662828592575,
+      "brightness_mean": 106.24927473294005,
+      "face_area_mean": 1.0
+    }
+  }
+}

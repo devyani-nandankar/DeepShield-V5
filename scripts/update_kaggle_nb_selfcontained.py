@@ -1,0 +1,162 @@
+import json
+import base64
+from pathlib import Path
+
+# Read latest train_deepshield_v5.py content
+script_path = Path("training/train_deepshield_v5.py")
+script_text = script_path.read_text(encoding="utf-8")
+script_b64 = base64.b64encode(script_text.encode("utf-8")).decode("ascii")
+
+nb_path = Path("training/DeepShield_V5_Kaggle.ipynb")
+with open(nb_path, "r", encoding="utf-8") as f:
+    nb = json.load(f)
+
+# Cell 7 (Setup Cell / Index 7)
+nb["cells"][7]["source"] = [
+    "# SETUP CELL -- UPLOAD & CONFIGURE TRAINING SCRIPT\n",
+    "# Guarantees that /kaggle/working/train_deepshield_v5.py has the latest 5.0.3-face-path-fix script.\n",
+    "import os\n",
+    "import sys\n",
+    "import shutil\n",
+    "import base64\n",
+    "from pathlib import Path\n",
+    "\n",
+    "target_script = Path(\"/kaggle/working/train_deepshield_v5.py\")\n",
+    "EXPECTED_VERSION = \"5.0.3-face-path-fix\"\n",
+    "\n",
+    "print(\"=\" * 70)\n",
+    "print(\"DEEPSHIELD V5: TRAINING SCRIPT SYNCHRONIZATION\")\n",
+    "print(\"=\" * 70)\n",
+    "\n",
+    "# 1. First priority: check attached Kaggle datasets in /kaggle/input\n",
+    "CANDIDATE_DIRS = [\n",
+    "    Path(\"/kaggle/input/datasets/devyaninandankar/deepshield-v5-code\"),\n",
+    "    Path(\"/kaggle/input/deepshield-v5-code\"),\n",
+    "    Path(\"/kaggle/input/deepshield-training-script\"),\n",
+    "    Path(\"/kaggle/input/face_cropped_fast10\"),\n",
+    "    Path(\"/kaggle/input\")\n",
+    "]\n",
+    "\n",
+    "best_source = None\n",
+    "for cdir in CANDIDATE_DIRS:\n",
+    "    if cdir.exists():\n",
+    "        for root, dirs, files in os.walk(str(cdir)):\n",
+    "            if \"train_deepshield_v5.py\" in files:\n",
+    "                p = Path(root) / \"train_deepshield_v5.py\"\n",
+    "                try:\n",
+    "                    txt = p.read_text(encoding=\"utf-8\", errors=\"ignore\")\n",
+    "                    if EXPECTED_VERSION in txt:\n",
+    "                        best_source = p\n",
+    "                        break\n",
+    "                except Exception:\n",
+    "                    pass\n",
+    "        if best_source:\n",
+    "            break\n",
+    "\n",
+    "if best_source:\n",
+    "    shutil.copy2(best_source, target_script)\n",
+    "    source_desc = f\"Kaggle dataset: {best_source}\"\n",
+    "else:\n",
+    "    # 2. Embedded latest 5.0.3-face-path-fix script (guarantees update even without dataset upload)\n",
+    f"    EMBEDDED_B64 = \"{script_b64}\"\n",
+    "    decoded_bytes = base64.b64decode(EMBEDDED_B64)\n",
+    "    target_script.write_bytes(decoded_bytes)\n",
+    "    source_desc = \"Synchronized from latest verified 5.0.3-face-path-fix build\"\n",
+    "\n",
+    "# 3. Verify target script on disk\n",
+    "file_size = target_script.stat().st_size\n",
+    "script_content = target_script.read_text(encoding=\"utf-8\", errors=\"ignore\")\n",
+    "\n",
+    "found_version = None\n",
+    "for line in script_content.splitlines():\n",
+    "    if \"SCRIPT_VERSION\" in line and \"=\" in line:\n",
+    "        found_version = line.split(\"=\")[-1].strip().strip('\"').strip(\"'\")\n",
+    "        break\n",
+    "\n",
+    "print(f\"Source:            {source_desc}\")\n",
+    "print(f\"Destination path:  {target_script}\")\n",
+    "print(f\"File size:         {file_size:,} bytes\")\n",
+    "print(f\"SCRIPT_VERSION:    {found_version}\")\n",
+    "print(\"=\" * 70)\n",
+    "\n",
+    "# Hard Check\n",
+    "if found_version != EXPECTED_VERSION or \"face_path\" not in script_content:\n",
+    "    print(\"[!] CRITICAL ERROR: STALE SCRIPT DETECTED!\")\n",
+    "    sys.exit(\"STALE TRAINING SCRIPT DETECTED — DO NOT TRAIN\")\n",
+    "\n",
+    "print(\"[+] SCRIPT INTEGRITY CHECK: PASS\")\n",
+    "print(\"TRAINING SCRIPT READY\")\n",
+    "print(\"=\" * 70)\n"
+]
+
+# Cell 8 (Verification Cell / Index 8)
+nb["cells"][8]["source"] = [
+    "# CELL 8 -- VERIFY TRAIN_DEEPSHIELD_V5.PY\n",
+    "import os\n",
+    "import sys\n",
+    "import py_compile\n",
+    "from pathlib import Path\n",
+    "\n",
+    "print(\"=\" * 60)\n",
+    "print(\"DEEPSHIELD V5: TRAINING SCRIPT INTEGRITY AUDIT\")\n",
+    "print(\"=\" * 60)\n",
+    "\n",
+    "script_path = Path(\"/kaggle/working/train_deepshield_v5.py\")\n",
+    "\n",
+    "if not script_path.is_file():\n",
+    "    print(\"[!] Training script not found at /kaggle/working/train_deepshield_v5.py\")\n",
+    "    sys.exit(1)\n",
+    "\n",
+    "# 1. Python Syntax Check\n",
+    "try:\n",
+    "    py_compile.compile(str(script_path), doraise=True)\n",
+    "    syntax_pass = True\n",
+    "    print(\"Syntax:                  PASS\")\n",
+    "except Exception as exc:\n",
+    "    syntax_pass = False\n",
+    "    print(f\"Syntax:                  FAIL ({exc})\")\n",
+    "\n",
+    "with open(script_path, \"r\", encoding=\"utf-8\") as f:\n",
+    "    content = f.read()\n",
+    "\n",
+    "# 2. Version Verification\n",
+    "has_version = 'SCRIPT_VERSION = \"5.0.3-face-path-fix\"' in content\n",
+    "print(f\"Script version:          {'5.0.3-face-path-fix (PASS)' if has_version else 'FAIL'}\")\n",
+    "\n",
+    "# 3. face_path Resolver Verification\n",
+    "has_face_path_resolver = \"face_path\" in content and \"bname = Path(str(row['face_path'])\" in content.replace('\"', \"'\")\n",
+    "if not has_face_path_resolver:\n",
+    "    has_face_path_resolver = \"face_path\" in content and \"resolve_split_filepaths\" in content\n",
+    "print(f\"face_path resolver:      {'PASS' if has_face_path_resolver else 'FAIL'}\")\n",
+    "\n",
+    "# 4. EfficientNetB2 Backbone\n",
+    "has_effnet = \"EfficientNetB2\" in content\n",
+    "print(f\"EfficientNetB2:          {'PASS' if has_effnet else 'FAIL'}\")\n",
+    "\n",
+    "# 5. Input Dimension 224x224x3\n",
+    "has_input_size = \"IMAGE_SIZE = (224, 224)\" in content\n",
+    "print(f\"Input 224x224x3:         {'PASS' if has_input_size else 'FAIL'}\")\n",
+    "\n",
+    "# 6. BatchNorm Frozen\n",
+    "has_freeze_bn = \"isinstance(layer, layers.BatchNormalization)\" in content\n",
+    "print(f\"BatchNorm frozen:        {'PASS' if has_freeze_bn else 'FAIL'}\")\n",
+    "\n",
+    "script_pass = syntax_pass and has_version and has_face_path_resolver and has_effnet and has_input_size and has_freeze_bn\n",
+    "\n",
+    "print(\"=\" * 60)\n",
+    "if script_pass:\n",
+    "    print(\"TRAINING SCRIPT AUDIT: PASS\")\n",
+    "else:\n",
+    "    print(\"TRAINING SCRIPT AUDIT: FAIL — STALE OR INVALID SCRIPT\")\n",
+    "    sys.exit(\"STALE TRAINING SCRIPT DETECTED — DO NOT TRAIN\")\n",
+    "print(\"=\" * 60)\n"
+]
+
+# Ensure Cell 11 is strictly unexecuted
+nb["cells"][11]["execution_count"] = None
+nb["cells"][11]["outputs"] = []
+
+with open(nb_path, "w", encoding="utf-8") as f:
+    json.dump(nb, f, indent=1)
+
+print("[+] Updated DeepShield_V5_Kaggle.ipynb with bulletproof script synchronization.")
